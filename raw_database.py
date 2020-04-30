@@ -23,12 +23,12 @@ class RawMongodb(object):
 
     def rawpath2mongodb(self):
 
-        self.pn = self.args['pn']     # 子项目编号
-        self.projpath = self.args['projpath']    # 合同编号
+        self.pn = self.args['pn']       # 子项目编号
+        self.projpath = self.args['projpath']      # 合同编号
         self.jobname = self.projpath.rstrip('/').split('/')[-1] 
         self.contractid = self.jobname.split('.')[1]
         self.sample_list = self.args['sample_list'] or input("请输入sample_list： ")
-        self.fenqi = re.search(r'.*B(\d*)\D.*', self.sample_list).group(1) or None  # 分期
+        self.fenqi = re.search(r'.*B(\d*)\D*', self.sample_list).group(1) or None  # 分期
 
         collection = self.get_collection()
         projid, projname = open(self.pn, 'r', encoding="utf-8").read().strip().split('\t')
