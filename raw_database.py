@@ -20,7 +20,6 @@ class RawMongodb(object):
         collection = db.collection_name
         return collection
 
-
     def rawpath2mongodb(self):
 
         self.pn = self.args['pn']       # 子项目编号
@@ -68,7 +67,6 @@ class RawMongodb(object):
         else:
             print('no data need insert')
 
-
     def add_upload_tag(self, upload_file):
         collection = self.get_collection()
         with open(upload_file, 'r') as f:
@@ -86,7 +84,28 @@ class RawMongodb(object):
 
                 upload_tag = {'upload': 'done', 'mv_path':mv_path}
                 collection.update_many(condition, {'$set': upload_tag})
-
+                
+    def query(self):
+        
+        collection = self.get_collection()
+        query_item = eval(input("请输入查询字符串[按照字典的形式传入]: "))
+        results = collection.find(query_item)
+        
+        if not self.args['out']:
+            n = 1
+            if results:
+                for result in results:
+                    print(n, result)
+                    n += 1
+        return results
+    
+    def out_result(self):
+        result_dict = self.query()
+        with open(self.args['out'], 'w') as o:
+            for item_dict in result_dict:
+                values = [v for v in item_dict.values()]
+                o.write("{}\n".format("\t".join(values[1:])))
+                
 
 if __name__ == "__main__":
 
@@ -97,20 +116,19 @@ if __name__ == "__main__":
     parser.add_argument('--projpath', help="项目路劲")
     parser.add_argument('--add_tag', action="store_true")
     parser.add_argument('--upload_file', help="如果上云无误，给数据库中的记录加上tag")
+    parser.add_argument('--query', action="store_true" ,help="在数据库里面查询，按照字典的形式进行查询")
+    parser.add_argument('--out', help="输出查询内容")
     args = vars(parser.parse_args())
 
     t = RawMongodb(args)
     # print(t)
     if args['add_tag']:
         t.add_upload_tag(args['upload_file'])
+    elif args['query']:
+        t.query()
+    elif args['out']:
+        t.out_result()
     else:
         t.rawpath2mongodb()
-
-
-
-
-
-        
-
 
 
