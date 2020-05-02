@@ -107,19 +107,8 @@ class RawMongodb(object):
                 o.write("{}\n".format("\t".join(values[1:])))
                 
 
-if __name__ == "__main__":
-
-    import argparse
-    parser = argparse.ArgumentParser(description="demo")
-    parser.add_argument('--pn', help="pn.txt")
-    parser.add_argument('--sample_list', help="sample_list")
-    parser.add_argument('--projpath', help="项目路劲")
-    parser.add_argument('--add_tag', action="store_true")
-    parser.add_argument('--upload_file', help="如果上云无误，给数据库中的记录加上tag")
-    parser.add_argument('--query', action="store_true" ,help="在数据库里面查询，按照字典的形式进行查询")
-    parser.add_argument('--out', help="输出查询内容")
-    args = vars(parser.parse_args())
-
+def main():
+    
     t = RawMongodb(args)
     # print(t)
     if args['add_tag']:
@@ -130,5 +119,21 @@ if __name__ == "__main__":
         t.out_result()
     else:
         t.rawpath2mongodb()
+ 
+
+if __name__ == "__main__":
+
+    import argparse
+    parser = argparse.ArgumentParser(description="demo")
+    parser.add_argument('--pn', help="pn.txt")
+    parser.add_argument('--sample_list', help="sample_list")
+    parser.add_argument('--projpath', help="项目路劲")
+    parser.add_argument('--add_tag', action="store_true")
+    parser.add_argument('--upload_file', help="如果上云无误，给数据库中的记录加上tag")
+    parser.add_argument('--query', action="store_true" ,help="在数据库里面查询，按照字典的形式进行查询")
+    parser.add_argument('--out', help="输出查询内容到文件")
+    args = vars(parser.parse_args())
+
+    main()
 
 
